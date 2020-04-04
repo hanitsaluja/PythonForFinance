@@ -1,0 +1,24 @@
+import datetime as dt
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib import style
+import pandas_datareader.data as web
+style.use('ggplot')
+#start = dt.datetime(2018,1,1)
+#end = dt.datetime(2020,1,1)
+#df = web.DataReader('TSLA','yahoo',start, end)
+#df.to_csv('tsla.csv')
+df = pd.read_csv('tsla.csv',parse_dates=True, index_col=0)
+#print(df.head())
+#df[['High', 'Low', 'Low', 'Close']].plot()
+df['5ma'] = df['Adj Close'].rolling(window=5, min_periods=0).mean()
+df['10ma'] = df['Adj Close'].rolling(window=10, min_periods=0).mean()
+df['25ma'] = df['Adj Close'].rolling(window=25, min_periods=0).mean()
+#df[['Adj Close', '5ma', '10ma', '25ma']].plot()
+ax1 = plt.subplot2grid((6,1),(0,0),rowspan=5,colspan=1)
+ax2 = plt.subplot2grid((6,1),(5,0),rowspan=1,colspan=1,sharex=ax1)
+ax1.plot(df['Adj Close'])
+ax1.plot(df['5ma'])
+ax1.plot(df['10ma'])
+ax1.plot(df['25ma'])
+ax2.plot(df['Volume'])
